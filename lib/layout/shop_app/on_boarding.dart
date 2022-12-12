@@ -36,62 +36,66 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(children: [
-            Expanded(
-              child: PageView.builder(
-                onPageChanged: (value) {
-                  if (value == boarding.length - 1) {
-                    setState(() {
-                      isLast = true;
-                    });
-                  } else {
-                    setState(() {
-                      isLast = false;
-                    });
-                  }
-                },
-                physics: const BouncingScrollPhysics(),
-                controller: boardController,
-                itemBuilder: (context, index) =>
-                    buildBoardingItem(boarding[index]),
-                itemCount: boarding.length,
-              ),
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 20,
-                ),
-                SmoothPageIndicator(
-                  controller: boardController,
-                  count: boarding.length,
-                  effect: const ExpandingDotsEffect(
-                      activeDotColor: Colors.black,
-                      dotColor: Colors.grey,
-                      dotHeight: 10,
-                      expansionFactor: 4,
-                      dotWidth: 10,
-                      spacing: 5),
-                ),
-                const Spacer(),
-                FloatingActionButton(
-                  onPressed: () {
-                    if (isLast) {
-                      navigateAndFinish(context, SplashScreen());
+          child: SingleChildScrollView(
+            child: Column(
+                mainAxisSize: MainAxisSize.min, children: [
+              SizedBox(
+                height: 695,
+                child: PageView.builder(
+                  onPageChanged: (value) {
+                    if (value == boarding.length - 1) {
+                      setState(() {
+                        isLast = true;
+                      });
                     } else {
-                      boardController.nextPage(
-                          duration: const Duration(seconds: 2),
-                          curve: Curves.fastLinearToSlowEaseIn);
+                      setState(() {
+                        isLast = false;
+                      });
                     }
                   },
-                  backgroundColor: Colors.black,
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
+                  physics: const BouncingScrollPhysics(),
+                  controller: boardController,
+                  itemBuilder: (context, index) =>
+                      buildBoardingItem(boarding[index]),
+                  itemCount: boarding.length,
+                ),
+              ),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
                   ),
-                )
-              ],
-            ),
-          ]),
+                  SmoothPageIndicator(
+                    controller: boardController,
+                    count: boarding.length,
+                    effect: const ExpandingDotsEffect(
+                        activeDotColor: Colors.black,
+                        dotColor: Colors.grey,
+                        dotHeight: 10,
+                        expansionFactor: 4,
+                        dotWidth: 10,
+                        spacing: 5),
+                  ),
+                  const Spacer(),
+                  FloatingActionButton(
+                    onPressed: () {
+                      if (isLast) {
+                        navigateAndFinish(context, SplashScreen());
+                      } else {
+                        boardController.nextPage(
+                            duration: const Duration(seconds: 2),
+                            curve: Curves.fastLinearToSlowEaseIn);
+                      }
+                    },
+                    backgroundColor: Colors.black,
+                    child: const Icon(
+                      Icons.arrow_forward_ios,
+                    ),
+                  )
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );
