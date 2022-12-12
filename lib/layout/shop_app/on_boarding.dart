@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shop_app/modules/login.dart';
+import 'package:shop_app/modules/splash.dart';
 import 'package:shop_app/shared/component/components.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -77,7 +77,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 FloatingActionButton(
                   onPressed: () {
                     if (isLast) {
-                      navigateAndFinish(context, LoginScreen());
+                      navigateAndFinish(context, SplashScreen());
                     } else {
                       boardController.nextPage(
                           duration: const Duration(seconds: 2),

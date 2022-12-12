@@ -29,7 +29,7 @@ ThemeData darkTheme = ThemeData(
             fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)));
 
 ThemeData lightTheme = ThemeData(
-    primarySwatch: Colors.deepOrange,
+    primarySwatch: Colors.blueGrey,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(
