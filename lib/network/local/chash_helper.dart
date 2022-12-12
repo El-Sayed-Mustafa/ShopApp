@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CashHelper {
-
-
   static SharedPreferences? sharedPreferences;
 
   static init() async {
@@ -31,4 +29,9 @@ class CashHelper {
     return await sharedPreferences?.setDouble(key, value);
   }
 
+  static Future<bool?> removeData({
+    required String key,
+  }) async {
+    return await sharedPreferences?.remove(key);
+  }
 }

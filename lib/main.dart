@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/layout/shop_app/home_screen.dart';
 import 'package:shop_app/modules/on_boarding.dart';
 import 'package:shop_app/modules/login/login.dart';
 import 'package:shop_app/shared/cubit/AppStates.dart';
@@ -18,19 +19,33 @@ void main() async {
   DioHelper.init();
   await CashHelper.init();
 
+  Widget widget;
   bool? isDark = CashHelper.getData(key: 'isDark');
   bool? onBoarding = CashHelper.getData(key: 'onboarding');
+  String? token = CashHelper.getData(key: 'token');
 
-  print(onBoarding);
+  print(token);
 
-  runApp(MyApp( isDark,onBoarding));
+  if(onBoarding!=null) {
+    if(token!=null) {
+      widget = HomeScreen();
+    } else {
+      widget = LoginScreen();
+    }
+  }else{
+    widget = OnBoardingScreen();
+  }
+
+
+
+  runApp(MyApp( isDark,widget));
 }
 
 class MyApp extends StatelessWidget {
   bool? isDark;
-  bool? onBoarding;
+  final Widget? startWidget;
 
-  MyApp(this.isDark,this.onBoarding);
+  MyApp(this.isDark,this.startWidget);
 
   // This widget is the root of your application.
   @override
@@ -57,7 +72,7 @@ class MyApp extends StatelessWidget {
               //     ? ThemeMode.light
               //     : ThemeMode.light,
               debugShowCheckedModeBanner: false,
-              home: onBoarding! ?LoginScreen(): OnBoardingScreen(),
+              home: startWidget,
             );
           }),
     );
