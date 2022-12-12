@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_app/on_boarding.dart';
+import 'package:shop_app/modules/on_boarding.dart';
+import 'package:shop_app/modules/login/login.dart';
 import 'package:shop_app/shared/cubit/AppStates.dart';
 import 'package:shop_app/shared/cubit/app_cubit.dart';
 import 'package:shop_app/shared/observer/observer.dart';
@@ -18,14 +19,18 @@ void main() async {
   await CashHelper.init();
 
   bool? isDark = CashHelper.getData(key: 'isDark');
+  bool? onBoarding = CashHelper.getData(key: 'onboarding');
 
-  runApp(MyApp(isDark));
+  print(onBoarding);
+
+  runApp(MyApp( isDark,onBoarding));
 }
 
 class MyApp extends StatelessWidget {
   bool? isDark;
+  bool? onBoarding;
 
-  MyApp(this.isDark);
+  MyApp(this.isDark,this.onBoarding);
 
   // This widget is the root of your application.
   @override
@@ -52,7 +57,7 @@ class MyApp extends StatelessWidget {
               //     ? ThemeMode.light
               //     : ThemeMode.light,
               debugShowCheckedModeBanner: false,
-              home:  OnBoardingScreen(),
+              home: onBoarding! ?LoginScreen(): OnBoardingScreen(),
             );
           }),
     );

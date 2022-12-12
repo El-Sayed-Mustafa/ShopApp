@@ -17,7 +17,31 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => ShopLoginCubit(),
       child: BlocConsumer<ShopLoginCubit, ShopLoginStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if(state is ShopLoginSuccessState){
+            if(state.loginModel.status==true) {
+              Fluttertoast.showToast(
+                  msg: state.loginModel.message.toString(),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+            }else{
+              Fluttertoast.showToast(
+                  msg: state.loginModel.message.toString(),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+            }
+          }
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(),
@@ -48,7 +72,6 @@ class LoginScreen extends StatelessWidget {
                             },
                             label: 'Email Address',
                             prefix: Icons.email_outlined,
-
                           ),
                           const SizedBox(height: 20.0),
                           defaultFormField(
@@ -72,8 +95,7 @@ class LoginScreen extends StatelessWidget {
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.red,
                                   textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
+                                  fontSize: 16.0);
                               ShopLoginCubit.get(context)
                                   .changePasswordVisibility();
                             },
