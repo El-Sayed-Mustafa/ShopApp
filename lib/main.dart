@@ -10,6 +10,7 @@ import 'package:shop_app/shared/cubit/app_cubit.dart';
 import 'package:shop_app/shared/observer/observer.dart';
 import 'package:shop_app/styles/themes.dart';
 
+import 'layout/shop_app/cubit/cubit.dart';
 import 'network/local/chash_helper.dart';
 import 'network/remote/dio_helper.dart';
 
@@ -55,9 +56,9 @@ class MyApp extends StatelessWidget {
     ));
     return MultiBlocProvider(
       providers: [
-        // BlocProvider(
-        //   create: (context) => NewsCubit()..getBusiness(),
-        // ),
+        BlocProvider(
+          create: (context) => ShopCubit()..getHomeData(),
+        ),
         BlocProvider(
           create: (BuildContext context) => AppCubit(),
         ),
