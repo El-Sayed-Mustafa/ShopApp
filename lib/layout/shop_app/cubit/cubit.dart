@@ -7,6 +7,7 @@ import 'package:shop_app/modules/favourit_screen/favourit.dart';
 import 'package:shop_app/modules/product_screen/product.dart';
 import 'package:shop_app/modules/sitting/sitting_screen.dart';
 
+import '../../../models/categories_model.dart';
 import '../../../network/end_points.dart';
 import '../../../network/remote/dio_helper.dart';
 import '../../../shared/constant/constants.dart';
@@ -18,7 +19,7 @@ class ShopCubit extends Cubit<ShopStates> {
   static ShopCubit get(context) => BlocProvider.of(context);
 
   int currentIndex = 0;
-
+  int counter = 0;
   List<Widget> bottomScreen = [
     ProductScreen(),
     CategoriesScreen(),
@@ -31,15 +32,16 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopBottomNavState());
   }
 
-   HomeModel? homeModel;
+  HomeModel? homeModel;
 
   Map<int, bool> favorites = {};
 
   void getHomeData() {
     emit(ShopLoadingHomeDataState());
 
+
     DioHelper.getData(
-      url: HOME,
+      url: home,
       token: token,
     ).then((value) {
       homeModel = HomeModel.fromJson(value?.data);
@@ -53,13 +55,26 @@ class ShopCubit extends Cubit<ShopStates> {
           element.id: element.inFavorites,
         });
       }
-
-      //print(favorites.toString());
-
+      counter++;
       emit(ShopSuccessHomeDataState());
     }).catchError((error) {
       print(error.toString());
       emit(ShopErrorHomeDataState());
+    });
+  }
+
+  CategoriesModel? categoriesModel;
+
+  void getCategories() {
+    DioHelper.getData(
+      url: categories,
+    ).then((value) {
+      categoriesModel = CategoriesModel.fromJson(value?.data);
+      counter++;
+      emit(ShopSuccessCategoriesState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ShopErrorCategoriesState());
     });
   }
 }

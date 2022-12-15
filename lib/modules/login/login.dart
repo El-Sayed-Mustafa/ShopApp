@@ -1,7 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/layout/shop_app/home_screen.dart';
 import 'package:shop_app/modules/login/cubit/cubit.dart';
 import 'package:shop_app/modules/login/cubit/states.dart';
@@ -21,9 +20,17 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<ShopLoginCubit, ShopLoginStates>(
         listener: (context, state) {
           if (state is ShopLoginSuccessState) {
+            showToast(
+                msg: state.loginModel.message.toString(),
+                state: ToastState.WARNING);
             if (state.loginModel.status == true) {
-              CashHelper.saveData(key: 'token', value: state.loginModel.data?.token).then((value) {
+              CashHelper.saveData(
+                      key: 'token', value: state.loginModel.data.token)
+                  .then((value) {
                 navigateAndFinish(context, HomeScreen());
+                showToast(
+                    msg: state.loginModel.message.toString(),
+                    state: ToastState.WARNING);
               });
             } else {
               showToast(
@@ -78,20 +85,12 @@ class LoginScreen extends StatelessWidget {
                             },
                             isPassword: ShopLoginCubit.get(context).isPassword,
                             suffixPressed: () {
-                              Fluttertoast.showToast(
-                                  msg: "This is Center Short Toast",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
                               ShopLoginCubit.get(context)
                                   .changePasswordVisibility();
                             },
                             validate: (String value) {
                               if (value.isEmpty) {
-                                return 'password is too short';
+                                return 'Please Enter Your Password';
                               }
                             },
                             label: 'Password',

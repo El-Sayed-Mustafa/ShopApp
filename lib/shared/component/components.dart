@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-enum ToastState{SUCCESS,ERROR,WARNING}
+enum ToastState { SUCCESS, ERROR, WARNING }
 
-Color chooseToastColor(ToastState state ){
+Color chooseToastColor(ToastState state) {
   Color color;
-  switch(state)
-  {
+  switch (state) {
     case ToastState.SUCCESS:
       color = Colors.green;
       break;
@@ -20,15 +19,26 @@ Color chooseToastColor(ToastState state ){
   return color;
 }
 
-void showToast({required String msg,required ToastState state})=>  Fluttertoast.showToast(
-    msg: msg,
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.CENTER,
-    timeInSecForIosWeb: 1,
-    backgroundColor: chooseToastColor(state),
-    textColor: Colors.white,
-    fontSize: 16.0
-);
+void showToast({required String msg, required ToastState state}) =>
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: chooseToastColor(state),
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+Widget myDivider() => Padding(
+      padding: const EdgeInsetsDirectional.only(
+        start: 20.0,
+      ),
+      child: Container(
+        width: double.infinity,
+        height: 1.0,
+        color: Colors.grey[300],
+      ),
+    );
 
 Widget defaultFormField({
   required TextEditingController controller,
@@ -53,7 +63,6 @@ Widget defaultFormField({
       onChanged: (value) {
         return onChange!(value);
       },
-
       onTap: () {
         onTap!();
       },
@@ -114,5 +123,3 @@ Widget defaultButton({
         ),
       ),
     );
-
-

@@ -57,14 +57,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ShopCubit()..getHomeData(),
+          create: (context) => ShopCubit()..getHomeData()..getCategories(),
         ),
         BlocProvider(
           create: (BuildContext context) => AppCubit(),
         ),
       ],
       child: BlocConsumer<AppCubit, AppStates>(
-          listener: (context, state) {},
+          listener: (context, state) {
+
+          },
           builder: (context, state) {
             return MaterialApp(
               theme:lightTheme,

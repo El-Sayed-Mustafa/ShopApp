@@ -7,6 +7,8 @@ import 'package:shop_app/layout/shop_app/cubit/states.dart';
 import 'package:shop_app/layout/shop_app/home_model.dart';
 import 'package:shop_app/styles/colors.dart';
 
+import '../../models/categories_model.dart';
+
 class ProductScreen extends StatelessWidget {
   const ProductScreen({Key? key}) : super(key: key);
 
@@ -16,15 +18,18 @@ class ProductScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           return ConditionalBuilder(
-              condition: ShopCubit.get(context).homeModel != null,
-              builder: (context) =>
-                  productBuilder(ShopCubit.get(context).homeModel!),
+              condition: ShopCubit.get(context).homeModel != null &&
+                  ShopCubit.get(context).categoriesModel != null,
+              builder: (context) => productBuilder(
+                  ShopCubit.get(context).homeModel!,
+                  ShopCubit.get(context).categoriesModel!),
               fallback: (context) =>
                   const Center(child: CircularProgressIndicator()));
         });
   }
 
-  Widget productBuilder(HomeModel model) => SingleChildScrollView(
+  Widget productBuilder(HomeModel model, CategoriesModel categoriesModel) =>
+      SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
@@ -57,6 +62,55 @@ class ProductScreen extends StatelessWidget {
                   autoPlayAnimationDuration: const Duration(seconds: 1),
                   autoPlayCurve: Curves.fastOutSlowIn,
                   scrollDirection: Axis.horizontal,
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.grey[200],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const Text(
+                      'Categories',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    SizedBox(
+                      height: 70.0,
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) =>
+                            buildCategoryItem(categoriesModel.data.data[index]),
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 10.0,
+                        ),
+                        itemCount: categoriesModel.data.data.length,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const Text(
+                      'New Products',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -97,19 +151,23 @@ class ProductScreen extends StatelessWidget {
                     fit: BoxFit.contain,
                     image: NetworkImage(model.image),
                   ),
-                  if(model.discount!=0)
+                  if (model.discount != 0)
                     Container(
-                    width: 60,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
+                      width: 60,
+                      height: 25,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.red,),
-                    child: const Text(
-                      'OFFER',
-                      style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),
-                    ),
-                  )
+                        color: Colors.red,
+                      ),
+                      child: const Text(
+                        'OFFER',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
                 ],
               ),
               const SizedBox(
@@ -127,29 +185,38 @@ class ProductScreen extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text(
-                    ' ${model.price.round()}\$',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue[600]),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        ' ${model.price.round()} EGP',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[600]),
+                      ),
+                      if (model.discount != 0)
+                        Text(
+                          ' ${model.oldPrice.round()} EGP',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough),
+                        ),
+                    ],
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  if (model.discount != 0)
-                    Text(
-                      ' ${model.oldPrice.round()}\$',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.favorite_border,
+                      size: 20,
                     ),
-                  Spacer(),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border,size: 20,),padding: EdgeInsets.zero,)
+                    padding: EdgeInsets.zero,
+                  )
                 ],
               )
             ],
@@ -157,3 +224,35 @@ class ProductScreen extends StatelessWidget {
         ),
       );
 }
+
+Widget buildCategoryItem(DataModel model) => Container(
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Image(
+                image: NetworkImage(model.image),
+                fit: BoxFit.contain,
+                height: 50.0,
+                width: 50.0,
+              ),
+            ),
+            Text(
+              model.name,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                backgroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
