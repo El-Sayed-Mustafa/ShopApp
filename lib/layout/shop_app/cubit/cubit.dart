@@ -8,6 +8,7 @@ import 'package:shop_app/modules/product_screen/product.dart';
 import 'package:shop_app/modules/sitting/sitting_screen.dart';
 
 import '../../../models/categories_model.dart';
+import '../../../models/change_favourit.dart';
 import '../../../network/end_points.dart';
 import '../../../network/remote/dio_helper.dart';
 import '../../../shared/constant/constants.dart';
@@ -34,7 +35,7 @@ class ShopCubit extends Cubit<ShopStates> {
 
   HomeModel? homeModel;
 
-  Map<int, bool> favorites = {};
+  Map<int, bool> favorite = {};
 
   void getHomeData() {
     emit(ShopLoadingHomeDataState());
@@ -46,15 +47,13 @@ class ShopCubit extends Cubit<ShopStates> {
     ).then((value) {
       homeModel = HomeModel.fromJson(value?.data);
 
-      print('object ');
-      print(homeModel?.data.banners[0].image);
-      print(homeModel?.status);
-
       for (var element in homeModel!.data.products) {
-        favorites.addAll({
+        favorite.addAll({
           element.id: element.inFavorites,
         });
       }
+      print(homeModel?.data.products[0].id);
+      print(favorite.toString());
       counter++;
       emit(ShopSuccessHomeDataState());
     }).catchError((error) {
@@ -64,10 +63,11 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   CategoriesModel? categoriesModel;
+  ChangeFavoritesModel? changeFavoritesModel;
 
   void getCategories() {
     DioHelper.getData(
-      url: categories,
+      url: categories, token: token,
     ).then((value) {
       categoriesModel = CategoriesModel.fromJson(value?.data);
       counter++;
@@ -75,6 +75,35 @@ class ShopCubit extends Cubit<ShopStates> {
     }).catchError((error) {
       print(error.toString());
       emit(ShopErrorCategoriesState());
+    });
+  }
+
+  void changeFavorites(int productId) {
+    favorite[productId] = !favorite[productId]!;
+
+    emit(ShopChangeFavoritesState());
+
+    DioHelper.postData(
+      url: favorites,
+      data: {
+        'product_id': productId,
+      },
+      token: token,
+    ).then((value) {
+      changeFavoritesModel = ChangeFavoritesModel.fromJson(value?.data);
+      print(value?.data);
+/*
+      if (!changeFavoritesModel.status) {
+        favorite[productId] = !favorite[productId]!;
+      } else {
+        getFavorites();
+      }*/
+
+      emit(ShopSuccessChangeFavoritesState(changeFavoritesModel!));
+    }).catchError((error) {
+      favorite[productId] = !favorite[productId]!;
+
+      emit(ShopErrorChangeFavoritesState());
     });
   }
 }

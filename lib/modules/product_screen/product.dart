@@ -22,13 +22,13 @@ class ProductScreen extends StatelessWidget {
                   ShopCubit.get(context).categoriesModel != null,
               builder: (context) => productBuilder(
                   ShopCubit.get(context).homeModel!,
-                  ShopCubit.get(context).categoriesModel!),
+                  ShopCubit.get(context).categoriesModel!,context),
               fallback: (context) =>
                   const Center(child: CircularProgressIndicator()));
         });
   }
 
-  Widget productBuilder(HomeModel model, CategoriesModel categoriesModel) =>
+  Widget productBuilder(HomeModel model, CategoriesModel categoriesModel,context) =>
       SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -126,7 +126,7 @@ class ProductScreen extends StatelessWidget {
                   childAspectRatio: 1 / 1.69,
                   crossAxisSpacing: 10,
                   children: List.generate(model.data.products.length,
-                      (index) => buildGridProduct(model.data.products[index])),
+                      (index) => buildGridProduct(model.data.products[index],context)),
                 ),
               ),
             )
@@ -134,7 +134,7 @@ class ProductScreen extends StatelessWidget {
         ),
       );
 
-  Widget buildGridProduct(ProductModel model) => Container(
+  Widget buildGridProduct(ProductModel model,context) => Container(
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: Colors.white),
@@ -210,10 +210,16 @@ class ProductScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.favorite_border,
-                      size: 20,
+                    onPressed: () {
+                      print(model.id);
+                    },
+                    icon: CircleAvatar(
+                      backgroundColor: ShopCubit.get(context).favorite[model.id]!?Colors.blue:Colors.black,
+                      child: const Icon(
+                        color: Colors.white,
+                        Icons.favorite_border,
+                        size: 20,
+                      ),
                     ),
                     padding: EdgeInsets.zero,
                   )

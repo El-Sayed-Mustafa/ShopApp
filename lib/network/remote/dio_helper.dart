@@ -39,7 +39,7 @@ class DioHelper {
       'token': token
     };
 
-    return await dio?.get(
+    return await dio!.get(
       url,
       queryParameters: query,
     );
