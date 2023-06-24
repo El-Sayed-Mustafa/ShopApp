@@ -1,4 +1,5 @@
 <h1>Shop App</h1>
+
 ![Green Minimalist Digital Product Mockups Animated Instagram Story (1)](https://github.com/El-Sayed-Mustafa/ShopApp/assets/110793510/0f296668-b942-4c43-ae0a-563ba78c5c06)
 
 <p>This is a Shop application built using APIs, Shared Preference, Dio Helper, and Bloc state management. The application allows users to browse and purchase items from an online store. The application uses APIs to retrieve the product data, Shared Preference to save the user's preferences, Dio Helper to handle the API requests, and Bloc state management to manage the state of the application.</p>
